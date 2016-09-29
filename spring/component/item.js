@@ -47,7 +47,7 @@ var styles = StyleSheet.create({
 // import Markdown from 'react-native-simple-markdown';
 import HTMLView from 'react-native-htmlview';
 
-var Url = 'http://api.woshuone.com/comments/?comment_approved=1&comment_POST_ID=';
+var Comment = require("./comment");
 
 module.exports = React.createClass({
    getInitialState(props){
@@ -62,40 +62,6 @@ module.exports = React.createClass({
             data: this.props.data,
             date: this.props.date
         });
-        this.fetchComments();
-   },
-   fetchComments() {
-        var data = this.props.data,
-            post_id = data['ID'],
-            url = Url;
-        url += post_id;
-        fetch(url)
-         .then((res) => {
-            try{
-                res = JSON.parse(res._bodyInit);
-                this.setState({
-                    dataSource: this.state.dataSource.cloneWithRows(res)
-                });
-            }catch(err){
-                console.log("评论数据解析错误:"+err.message);
-            }
-         })
-         .catch((error) => {
-            console.error(error);
-         });
-   },
-   renderComment(comment) {
-        var date = new Date(comment.comment_date || 0);
-        date = date.toLocaleDateString();
-        return (
-            <View style={styles.comment}>
-                <Text style={styles.cm_author}>
-                    {comment.comment_author} -- {comment.comment_author_email}
-                </Text>
-                <Text style={styles.cm_content}>{comment.comment_content}</Text>
-                <Text style={styles.cm_time}>{date}</Text>
-            </View>
-        )
    },
    render(){
         var data = this.state.data,
@@ -106,12 +72,7 @@ module.exports = React.createClass({
                 <Text style={styles.time}>{date} -- {data.comment_count}条回复</Text>
                 <HTMLView value={data.post_content}/>
                 
-                <Text style={{fontWeight: 'bold'}}>评论列表:</Text>
-                <ListView
-                    dataSource={this.state.dataSource}
-                    renderRow={this.renderComment}
-                    enableEmptySections
-                />
+                <Comment post_id={data.ID}></Comment>
             </ScrollView>
         );
    } 
