@@ -11,7 +11,7 @@ var styles = StyleSheet.create({
         marginTop : 10,
         flex : 1,
         justifyContent: 'center', alignItems: 'center',
-        height : 21,
+        // height : 21,
         resizeMode: Image.resizeMode.contain
     },
     listView : {
@@ -59,11 +59,9 @@ module.exports = React.createClass({
     //之所以取nextProps的值而不直接取this.props.cateId 是因为componentWillReceiveProps的更新早于props的更新
     componentWillReceiveProps(nextProps) {
         //猫头先转
-        this.setState({
-            loaded : false
-        })
-        //拉取数据
-        // this.fetchData();
+        // this.setState({
+        //     loaded : false
+        // })
     },
     //拉取数据
     fetchData: function(cateId) {
@@ -94,11 +92,11 @@ module.exports = React.createClass({
     //渲染列表
     renderListView : function(){
         //先展示加载中的菊花
-        // if(!this.state.loaded){
-        //     return(
-        //         <Image style={styles.loading} source={require('image!loading')} />
-        //   );
-        // };
+        if(!this.state.loaded){
+            return(
+                <Image style={styles.loading} source={require('./imgs/loading.gif')} />
+          );
+        };
         return(
             <ScrollView>
                 <ListView contentInset={{top: -64}}
