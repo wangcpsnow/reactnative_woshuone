@@ -1,7 +1,7 @@
 
 
 import React, { Component } from 'react';
-import { AppRegistry, ListView, Text, View,StyleSheet } from 'react-native';
+import { AppRegistry,StyleSheet,Navigator } from 'react-native';
 
 var styles = StyleSheet.create({
 	itemlist: {
@@ -14,8 +14,18 @@ var ItemList = require('./component/itemList');
 class ListViewBasics extends Component {
   // 初始化模拟数据
   render() {
+  	let defaultName = 'itemList';
+  	let defaultComponent = ItemList;
     return (
-      <ItemList style={styles.itemlist}/>
+      <Navigator
+	      initialRoute={{ name: defaultName, component: defaultComponent }}
+	      configureScene={(route) => {
+	        return Navigator.SceneConfigs.HorizontalSwipeJump;
+	      }}
+	      renderScene={(route, navigator) => {
+	        let Component = route.component;
+	        return <Component {...route.params} navigator={navigator} />
+	      }} />
     );
   }
 }

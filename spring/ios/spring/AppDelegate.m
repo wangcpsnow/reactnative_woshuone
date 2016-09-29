@@ -31,6 +31,8 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  [NSThread
+   sleepForTimeInterval:3.0];//设置启动页面时间
   return YES;
 }
 
