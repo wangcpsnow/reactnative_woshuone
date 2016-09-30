@@ -73,7 +73,6 @@ module.exports = React.createClass({
     },
     //拉取数据
     fetchData: function(cateId) {
-        console.log("URL:"+ API,pageIndex);
         this.setState({
             isLoadingMore: true
         });
@@ -91,7 +90,6 @@ module.exports = React.createClass({
                     loaded: true,
                     isLoadingMore: false
                 });
-                console.log("URL ok");
                 pageIndex++;
             }catch(err){
                 var res = [{
@@ -109,7 +107,6 @@ module.exports = React.createClass({
         })
     },
     _onRefresh: function() {
-        console.log("加载更多");
         if(this.state.isRefreshing){
             return;
         }
@@ -124,15 +121,12 @@ module.exports = React.createClass({
         }, 2000);
     },
     _toEnd: function(){
-        console.log("加载toEnd？",this.state.isLoadingMore);
         if(this.state.isLoadingMore){
             return;
         }
-        console.log("加载toEnd");
         this.fetchData();
     },
     _renderFooter: function(){
-        console.log("加载footer");
         return (
             <Text style={{textAlign: "center",paddingBottom: 10}}>
                 {hasAllLoad ? "全部加载完成..." : "正在加载中..."}
