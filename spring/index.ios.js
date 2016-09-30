@@ -1,13 +1,8 @@
-
-
 import React, { Component } from 'react';
 import { AppRegistry,StyleSheet,Navigator } from 'react-native';
 
 var styles = StyleSheet.create({
-	itemlist: {
-		// backgroundColor: '#ddd',
-		// paddingTop: 20
-	}
+
 });
 var ItemList = require('./component/itemList');
 

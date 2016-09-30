@@ -40,9 +40,6 @@ var Comment = React.createClass({
     componentWillReceiveProps(nextProps) {
     	this.fetchData(nextProps.post_id);
     },
-	componentDidMount(){
-
-    },
 	fetchData(post_id) {
 	    var url = Url;
 	    url += post_id;

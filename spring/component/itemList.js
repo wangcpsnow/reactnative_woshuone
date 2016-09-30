@@ -3,7 +3,12 @@
 // var React = require('react-native');
 import React, { Component } from 'react';
 
-import { StyleSheet, ListView, Text,View,Image,ScrollView,TouchableOpacity,Navigator } from 'react-native';
+import { 
+    StyleSheet, ListView, 
+    Text,View,Image,
+    ScrollView,TouchableOpacity,
+    Navigator,RefreshControl 
+} from 'react-native';
 
 // 组件样式
 var styles = StyleSheet.create({
@@ -39,9 +44,12 @@ var styles = StyleSheet.create({
     }
 });
 
-var Config = require("../config");
-var API =  Config.host + '/posts?post_status="publish"';
-var itemRow = require("./item");
+var Config = require("../config"),
+    itemRow = require("./item"),
+    pageIndex = 1,
+    API =  Config.host + '/posts?post_status="publish"&pageIndex=',
+    results = [],
+    hasAllLoad = false;
 
 
 module.exports = React.createClass({
@@ -49,7 +57,9 @@ module.exports = React.createClass({
     getInitialState(props) {
         return {
             dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
-            loaded: false
+            loaded: false,
+            isRefreshing: false,
+            isLoadingMore: false
         };
     },
     //只调用一次，在render之后调用
@@ -59,29 +69,38 @@ module.exports = React.createClass({
     //render 之前调用 
     //之所以取nextProps的值而不直接取this.props.cateId 是因为componentWillReceiveProps的更新早于props的更新
     componentWillReceiveProps(nextProps) {
-        //猫头先转
-        // this.setState({
-        //     loaded : false
-        // })
+        console.log("componentWillReceiveProps");
     },
     //拉取数据
     fetchData: function(cateId) {
-        fetch(API)
+        console.log("URL:"+ API,pageIndex);
+        this.setState({
+            isLoadingMore: true
+        });
+        fetch(API + pageIndex)
         .then((response) => {
             try{
-                response = JSON.parse(response._bodyInit)
-                // console.log(response)
+                response = JSON.parse(response._bodyInit);
+                if(response.length < 10){
+                    hasAllLoad = true;
+                }
+                results = results.concat(response);
+                
                 this.setState({
-                    dataSource: this.state.dataSource.cloneWithRows(response),
-                    loaded: true
+                    dataSource: this.state.dataSource.cloneWithRows(results),
+                    loaded: true,
+                    isLoadingMore: false
                 });
+                console.log("URL ok");
+                pageIndex++;
             }catch(err){
                 var res = [{
                     post_title: "数据错误"
                 }];
                 this.setState({
                     dataSource: this.state.dataSource.cloneWithRows(res),
-                    loaded: true
+                    loaded: true,
+                    isLoadingMore: false
                 });
             }
         })
@@ -89,24 +108,56 @@ module.exports = React.createClass({
             console.error(error);
         })
     },
-
+    _onRefresh: function() {
+        console.log("加载更多");
+        if(this.state.isRefreshing){
+            return;
+        }
+        this.setState({isRefreshing: true});
+        setTimeout(() => {
+            var res = [{
+                post_title: "数据错误loadmore"
+            }];
+            this.setState({
+                isRefreshing: false
+            });
+        }, 2000);
+    },
+    _toEnd: function(){
+        console.log("加载toEnd？",this.state.isLoadingMore);
+        if(this.state.isLoadingMore){
+            return;
+        }
+        console.log("加载toEnd");
+        this.fetchData();
+    },
+    _renderFooter: function(){
+        console.log("加载footer");
+        return (
+            <Text style={{textAlign: "center",paddingBottom: 10}}>
+                {hasAllLoad ? "全部加载完成..." : "正在加载中..."}
+            </Text>
+        );
+    },
     //渲染列表
     renderListView : function(){
         //先展示加载中的菊花
-        if(!this.state.loaded){
-            return(
-                <Image style={styles.loading} source={require('./imgs/loading.gif')} />
-          );
-        };
+        // if(!this.state.loaded){
+        //     return(
+        //         <Image style={styles.loading} source={require('./imgs/loading.gif')} />
+        //     );
+        // };
         return(
-            <ScrollView>
-                <ListView contentInset={{top: -64}}
-                    dataSource={this.state.dataSource}
-                    renderRow={this.renderRow}
-                    style={styles.listView}
-                    enableEmptySections
-                />
-            </ScrollView>
+            <ListView
+                dataSource={this.state.dataSource}
+                renderRow={this.renderRow}
+                style={styles.listView}
+                enableEmptySections
+
+                onEndReached={ this._toEnd }
+                onEndReachedThreshold={10}
+                renderFooter={ this._renderFooter }
+            />
         );
     },
     renderRow: function(item){
