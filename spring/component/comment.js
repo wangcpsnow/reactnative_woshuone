@@ -6,22 +6,8 @@ import {
     ListView,
     Image
 } from 'react-native';
+
 var styles = StyleSheet.create({
-    item: {
-        paddingTop: 30,
-        paddingLeft:10,
-        paddingRight:10
-    },
-    header: {
-        fontWeight: "bold",
-        fontSize: 20
-    },
-    time: {
-        textAlign: "right",
-        color: "silver",
-        marginBottom: 10,
-        marginTop: 10
-    },
     comment: {
         borderTopWidth: 1,
         borderColor: "silver",
@@ -40,7 +26,9 @@ var styles = StyleSheet.create({
         textAlign: "right"
     }
 });
-var Url = 'http://api.woshuone.com/comments/?comment_approved=1&comment_POST_ID=';
+
+var Config = require("../config");
+var Url = Config.host + '/comments/?comment_approved=1&comment_POST_ID=';
 
 var Comment = React.createClass({
 	getInitialState(){

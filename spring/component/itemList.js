@@ -39,7 +39,8 @@ var styles = StyleSheet.create({
     }
 });
 
-var API = 'http://api.woshuone.com/posts?post_status="publish"';
+var Config = require("../config");
+var API =  Config.host + '/posts?post_status="publish"';
 var itemRow = require("./item");
 
 

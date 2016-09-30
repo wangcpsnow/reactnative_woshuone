@@ -24,23 +24,6 @@ var styles = StyleSheet.create({
         color: "silver",
         marginBottom: 10,
         marginTop: 10
-    },
-    comment: {
-        borderTopWidth: 1,
-        borderColor: "silver",
-        marginTop: 10
-    },
-    cm_author: {
-        color: "red",
-        marginTop: 5
-    },
-    cm_content: {
-        marginTop: 5,
-        marginBottom: 5
-    },
-    cm_time: {
-        color: "silver",
-        textAlign: "right"
     }
 });
 
