@@ -29,6 +29,7 @@ var styles = StyleSheet.create({
 
 // import Markdown from 'react-native-simple-markdown';
 import HTMLView from 'react-native-htmlview';
+// import HTMLView from 'react-native-html-converter';
 
 var Comment = require("./comment");
 
