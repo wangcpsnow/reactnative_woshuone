@@ -32,6 +32,7 @@ import HTMLView from 'react-native-htmlview';
 // import HTMLView from 'react-native-html-converter';
 
 var Comment = require("./comment");
+var Category = require("./category");
 
 module.exports = React.createClass({
    getInitialState(props){
@@ -56,6 +57,7 @@ module.exports = React.createClass({
                 <Text style={styles.time}>{date} -- {data.comment_count}条回复</Text>
                 <HTMLView value={data.post_content}/>
                 
+                <Category post_id={data.ID}></Category>
                 <Comment post_id={data.ID}></Comment>
             </ScrollView>
         );
